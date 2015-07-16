@@ -56,21 +56,21 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
         public void CallingColumnExistsReturnsFalseIfColumnExistsInDifferentSchema()
         {
             using (var table = new PostgresTestTable(Processor, "TestSchema1", "id int"))
-                Processor.ColumnExists("TestSchema2", table.Name, "id").ShouldBeFalse();
+                Processor.ColumnExists("testschema2", table.Name, "id").ShouldBeFalse();
         }
 
         [Test]
         public void CallingConstraintExistsReturnsFalseIfConstraintExistsInDifferentSchema()
         {
             using (var table = new PostgresTestTable(Processor, "TestSchema1", "id int", "wibble int CONSTRAINT c1 CHECK(wibble > 0)"))
-                Processor.ConstraintExists("TestSchema2", table.Name, "c1").ShouldBeFalse();
+                Processor.ConstraintExists("testschema2", table.Name, "c1").ShouldBeFalse();
         }
 
         [Test]
         public void CallingTableExistsReturnsFalseIfTableExistsInDifferentSchema()
         {
             using (var table = new PostgresTestTable(Processor, "TestSchema1", "id int"))
-                Processor.TableExists("TestSchema2", table.Name).ShouldBeFalse();
+                Processor.TableExists("testschema2", table.Name).ShouldBeFalse();
         }
 
         [Test]

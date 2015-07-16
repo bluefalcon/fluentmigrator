@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Runner.Generators.Postgres;
+﻿using FluentMigrator.Expressions;
+using FluentMigrator.Runner.Generators.Postgres;
 using NUnit.Framework;
 using NUnit.Should;
 
@@ -21,7 +22,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetAlterSchemaExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema1\".\"TestTable\" SET SCHEMA \"TestSchema2\"");
+            result.ShouldBe("ALTER TABLE TestSchema1.TestTable SET SCHEMA TestSchema2");
         }
 
         [Test]
@@ -30,7 +31,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateSchemaExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE SCHEMA \"TestSchema\"");
+            result.ShouldBe("CREATE SCHEMA TestSchema");
         }
 
         [Test]
@@ -39,7 +40,25 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetDeleteSchemaExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("DROP SCHEMA \"TestSchema\"");
+            result.ShouldBe("DROP SCHEMA TestSchema");
+        }
+
+        [Test]
+        public void CanCreateSchemaWithUnderScoreNoQuotes()
+        {
+            var expression = new CreateSchemaExpression { SchemaName = "Test_Schema" };
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("CREATE SCHEMA Test_Schema");
+        }
+
+        [Test]
+        public void CanCreateSchemaInQuotesUsingSingleQuote()
+        {
+            var expression = new CreateSchemaExpression { SchemaName = "Test'Schema" };
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("CREATE SCHEMA \"Test'Schema\"");
         }
     }
 }

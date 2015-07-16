@@ -1,4 +1,7 @@
-﻿using FluentMigrator.Runner.Generators.Postgres;
+﻿using System.Data;
+using FluentMigrator.Expressions;
+using FluentMigrator.Model;
+using FluentMigrator.Runner.Generators.Postgres;
 using NUnit.Framework;
 using NUnit.Should;
 
@@ -25,7 +28,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" json NOT NULL, PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 json NOT NULL, PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -37,7 +40,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.Columns[1].CustomType = "json";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" json NOT NULL, PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 json NOT NULL, PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -47,7 +50,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -56,7 +59,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -68,7 +71,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL DEFAULT NULL, \"TestColumn2\" integer NOT NULL DEFAULT 0)");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL DEFAULT NULL, TestColumn2 integer NOT NULL DEFAULT 0)");
         }
 
         [Test]
@@ -79,7 +82,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.Columns[0].TableName = expression.TableName;
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL DEFAULT NULL, \"TestColumn2\" integer NOT NULL DEFAULT 0)");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL DEFAULT NULL, TestColumn2 integer NOT NULL DEFAULT 0)");
 
         }
 
@@ -90,7 +93,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL DEFAULT 'Default', \"TestColumn2\" integer NOT NULL DEFAULT 0)");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL DEFAULT 'Default', TestColumn2 integer NOT NULL DEFAULT 0)");
         }
 
         [Test]
@@ -100,7 +103,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" serial NOT NULL, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 serial NOT NULL, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -109,7 +112,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithAutoIncrementExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" serial NOT NULL, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 serial NOT NULL, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -118,7 +121,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithDefaultValue();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL DEFAULT 'Default', \"TestColumn2\" integer NOT NULL DEFAULT 0)");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL DEFAULT 'Default', TestColumn2 integer NOT NULL DEFAULT 0)");
         }
 
         [Test]
@@ -128,7 +131,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, PRIMARY KEY (\"TestColumn1\",\"TestColumn2\"))");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, PRIMARY KEY (TestColumn1,TestColumn2))");
         }
 
         [Test]
@@ -137,7 +140,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithMultiColumnPrimaryKeyExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, PRIMARY KEY (\"TestColumn1\",\"TestColumn2\"))");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, PRIMARY KEY (TestColumn1,TestColumn2))");
         }
 
         [Test]
@@ -147,7 +150,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, CONSTRAINT \"TestKey\" PRIMARY KEY (\"TestColumn1\",\"TestColumn2\"))");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, CONSTRAINT TestKey PRIMARY KEY (TestColumn1,TestColumn2))");
         }
 
         [Test]
@@ -156,7 +159,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithNamedMultiColumnPrimaryKeyExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, CONSTRAINT \"TestKey\" PRIMARY KEY (\"TestColumn1\",\"TestColumn2\"))");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, CONSTRAINT TestKey PRIMARY KEY (TestColumn1,TestColumn2))");
         }
 
         [Test]
@@ -166,7 +169,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, CONSTRAINT \"TestKey\" PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, CONSTRAINT TestKey PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -175,7 +178,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithNamedPrimaryKeyExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, CONSTRAINT \"TestKey\" PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, CONSTRAINT TestKey PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -185,7 +188,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -194,7 +197,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithNullableColumn();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text, \"TestColumn2\" integer NOT NULL)");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text, TestColumn2 integer NOT NULL)");
         }
 
         [Test]
@@ -204,7 +207,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"TestSchema\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE TestSchema.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -213,7 +216,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateTableWithPrimaryKeyExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("CREATE TABLE \"public\".\"TestTable1\" (\"TestColumn1\" text NOT NULL, \"TestColumn2\" integer NOT NULL, PRIMARY KEY (\"TestColumn1\"))");
+            result.ShouldBe("CREATE TABLE public.TestTable1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL, PRIMARY KEY (TestColumn1))");
         }
 
         [Test]
@@ -223,7 +226,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("DROP TABLE \"TestSchema\".\"TestTable1\"");
+            result.ShouldBe("DROP TABLE TestSchema.TestTable1");
         }
 
         [Test]
@@ -232,7 +235,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetDeleteTableExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("DROP TABLE \"public\".\"TestTable1\"");
+            result.ShouldBe("DROP TABLE public.TestTable1");
         }
 
         [Test]
@@ -242,7 +245,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" RENAME TO \"TestTable2\"");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 RENAME TO TestTable2");
         }
 
         [Test]
@@ -251,7 +254,29 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetRenameTableExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" RENAME TO \"TestTable2\"");
+            result.ShouldBe("ALTER TABLE public.TestTable1 RENAME TO TestTable2");
+        }
+
+        [Test]
+        public void CanCreateTableWithUnderScoreNoQuotes()
+        {
+            var expression = new CreateTableExpression() { TableName = "Test_Table1", };
+            expression.Columns.Add(new ColumnDefinition { Name = "TestColumn1", Type = DbType.String });
+            expression.Columns.Add(new ColumnDefinition { Name = "TestColumn2", Type = DbType.Int32 });
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("CREATE TABLE public.Test_Table1 (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL)");
+        }
+
+        [Test]
+        public void CanCreateTableInQuotesUsingSingleQuote()
+        {
+            var expression = new CreateTableExpression() { TableName = "Test'Table1", };
+            expression.Columns.Add(new ColumnDefinition { Name = "TestColumn1", Type = DbType.String });
+            expression.Columns.Add(new ColumnDefinition { Name = "TestColumn2", Type = DbType.Int32 });
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("CREATE TABLE public.\"Test'Table1\" (TestColumn1 text NOT NULL, TestColumn2 integer NOT NULL)");
         }
     }
 }

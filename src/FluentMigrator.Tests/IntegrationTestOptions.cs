@@ -54,7 +54,7 @@ namespace FluentMigrator.Tests
 
         public static DatabaseServerOptions Postgres = new DatabaseServerOptions
             {
-                ConnectionString = "Server=127.0.0.1;Port=5432;Database=FluentMigrator;User Id=test;Password=test;",
+                ConnectionString = "Server=127.0.0.1;Port=5432;Database=FluentMigrator;User Id=postgres;Password=postgres;",
                 IsEnabled = false
             };
 

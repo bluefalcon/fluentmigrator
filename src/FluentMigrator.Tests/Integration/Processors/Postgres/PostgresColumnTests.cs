@@ -86,7 +86,23 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
         public override void CallingColumnExistsReturnsTrueIfColumnExistsWithSchema()
         {
             using (var table = new PostgresTestTable(Processor, "TestSchema", "id int"))
-                Processor.ColumnExists("TestSchema", table.Name, "id").ShouldBeTrue();
+                Processor.ColumnExists("testschema", table.Name, "id").ShouldBeTrue();
+        }
+
+        [Test]
+        public void CallingColumnExistsCanAcceptColumnsNamesWithUpperNoQuotesInsertedToLowerCase()
+        {
+            var columnNameWithNoQuotes = Quoter.Quote("ID");
+            using (var table = new PostgresTestTable(Processor, null, columnNameWithNoQuotes + " int"))
+                Processor.ColumnExists(null, table.Name, "id").ShouldBeTrue();
+        }
+
+        [Test]
+        public void CallingColumnExistsCanAcceptColumnNamesWithUpperCaseWithQuotesInsertedToSameCase()
+        {
+            var columnNameWithQuotes = Quoter.Quote("\"Id\"");
+            using (var table = new PostgresTestTable(Processor, null, columnNameWithQuotes + " int"))
+                Processor.ColumnExists(null, table.Name, "Id").ShouldBeTrue();
         }
     }
 }

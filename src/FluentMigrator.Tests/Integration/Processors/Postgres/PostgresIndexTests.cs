@@ -120,7 +120,39 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
                 cmd.CommandText = string.Format("CREATE INDEX {0} ON {1} (id)", idxName, table.NameWithSchema);
                 cmd.ExecuteNonQuery();
 
-                Processor.IndexExists("TestSchema", table.Name, idxName).ShouldBeTrue();
+                Processor.IndexExists("testschema", table.Name, idxName).ShouldBeTrue();
+            }
+        }
+
+        [Test]
+        public void CallingIndexExistsCanAcceptIndexNameWithNoQuotesAndWillBeLowerCase()
+        {
+            using (var table = new PostgresTestTable(Processor, null, "id int"))
+            {
+                var idxName = string.Format("IdX_{0}", Quoter.UnQuote(table.Name));
+
+                var cmd = table.Connection.CreateCommand();
+                cmd.Transaction = table.Transaction;
+                cmd.CommandText = string.Format("CREATE INDEX {0} ON {1} (id)", idxName, table.Name);
+                cmd.ExecuteNonQuery();
+
+                Processor.IndexExists(null, table.Name, idxName.ToLower()).ShouldBeTrue();
+            }
+        }
+
+        [Test]
+        public void CallingIndexExistsCanAcceptIndexNameWithQuotesAndWillBeSameCase()
+        {
+            using (var table = new PostgresTestTable(Processor, null, "id int"))
+            {
+                var idxName = string.Format("\"IdX_{0}\"", Quoter.UnQuote(table.Name));
+
+                var cmd = table.Connection.CreateCommand();
+                cmd.Transaction = table.Transaction;
+                cmd.CommandText = string.Format("CREATE INDEX {0} ON {1} (id)", idxName, table.Name);
+                cmd.ExecuteNonQuery();
+
+                Processor.IndexExists(null, table.Name, idxName).ShouldBeTrue();
             }
         }
     }

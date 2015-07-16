@@ -37,21 +37,24 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
         [Test]
         public override void CallingColumnExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (var table = new PostgresTestTable(Processor, "Test'Schema", "id int"))
-                Processor.ColumnExists("Test'Schema", table.Name, "id").ShouldBeTrue();
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (var table = new PostgresTestTable(Processor, schemaNameSingleQuote, "id int"))
+                Processor.ColumnExists(schemaNameSingleQuote, table.Name, "id").ShouldBeTrue();
         }
 
         [Test]
         public override void CallingConstraintExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (var table = new PostgresTestTable(Processor, "Test'Schema", "id int", "wibble int CONSTRAINT c1 CHECK(wibble > 0)"))
-                Processor.ConstraintExists("Test'Schema", table.Name, "c1").ShouldBeTrue();
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (var table = new PostgresTestTable(Processor, schemaNameSingleQuote, "id int", "wibble int CONSTRAINT c1 CHECK(wibble > 0)"))
+                Processor.ConstraintExists(schemaNameSingleQuote, table.Name, "c1").ShouldBeTrue();
         }
 
         [Test]
         public override void CallingIndexExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (var table = new PostgresTestTable(Processor, "Test'Schema", "id int"))
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (var table = new PostgresTestTable(Processor, schemaNameSingleQuote, "id int"))
             {
                 var idxName = string.Format("\"idx_{0}\"", Quoter.UnQuote(table.Name));
 
@@ -60,31 +63,34 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
                 cmd.CommandText = string.Format("CREATE INDEX {0} ON {1} (id)", idxName, table.NameWithSchema);
                 cmd.ExecuteNonQuery();
 
-                Processor.IndexExists("Test'Schema", table.Name, idxName).ShouldBeTrue();
+                Processor.IndexExists(schemaNameSingleQuote, table.Name, idxName).ShouldBeTrue();
             }
         }
 
         [Test]
         public override void CallingSchemaExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (new PostgresTestTable(Processor, "Test'Schema", "id int"))
-                Processor.SchemaExists("Test'Schema").ShouldBeTrue();
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (new PostgresTestTable(Processor, schemaNameSingleQuote, "id int"))
+                Processor.SchemaExists(schemaNameSingleQuote).ShouldBeTrue();
         }
 
         [Test]
         public override void CallingTableExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (var table = new PostgresTestTable(Processor, "Test'Schema", "id int"))
-                Processor.TableExists("Test'Schema", table.Name).ShouldBeTrue();
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (var table = new PostgresTestTable(Processor, schemaNameSingleQuote, "id int"))
+                Processor.TableExists(schemaNameSingleQuote, table.Name).ShouldBeTrue();
         }
 
         [Test]
         public void CallingDefaultValueExistsCanAcceptSchemaNameWithSingleQuote()
         {
-            using (var table = new PostgresTestTable(Processor, "test'schema", "id int"))
+            var schemaNameSingleQuote = Quoter.QuoteSchemaName("Test'Schema");
+            using (var table = new PostgresTestTable(Processor, schemaNameSingleQuote, "id int"))
             {
                 table.WithDefaultValueOn("id");
-                Processor.DefaultValueExists("test'schema", table.Name, "id", 1).ShouldBeTrue();
+                Processor.DefaultValueExists(schemaNameSingleQuote, table.Name, "id", 1).ShouldBeTrue();
             }
         }
     }

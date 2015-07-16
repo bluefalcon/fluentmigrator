@@ -56,28 +56,28 @@ namespace FluentMigrator.Tests.Integration
         public void SetUp()
         {
             _runnerContext = new RunnerContext(new TextWriterAnnouncer(System.Console.Out))
-                                        {
-                                            Namespace = "FluentMigrator.Tests.Integration.Migrations"
-                                        };
+            {
+                Namespace = "FluentMigrator.Tests.Integration.Migrations"
+            };
         }
 
         [Test]
         public void CanRunMigration()
         {
             ExecuteWithSupportedProcessors(processor =>
-                {
-                    var runner = new MigrationRunner(Assembly.GetExecutingAssembly(), _runnerContext, processor);
+            {
+                var runner = new MigrationRunner(Assembly.GetExecutingAssembly(), _runnerContext, processor);
 
-                    runner.Up(new TestCreateAndDropTableMigration());
+                runner.Up(new TestCreateAndDropTableMigration());
 
-                    processor.TableExists(null, "TestTable").ShouldBeTrue();
+                processor.TableExists(null, "TestTable").ShouldBeTrue();
 
-                    // This is a hack until MigrationVersionRunner and MigrationRunner are refactored and merged together
-                    //processor.CommitTransaction();
+                // This is a hack until MigrationVersionRunner and MigrationRunner are refactored and merged together
+                //processor.CommitTransaction();
 
-                    runner.Down(new TestCreateAndDropTableMigration());
-                    processor.TableExists(null, "TestTable").ShouldBeFalse();
-                });
+                runner.Down(new TestCreateAndDropTableMigration());
+                processor.TableExists(null, "TestTable").ShouldBeFalse();
+            });
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace FluentMigrator.Tests.Integration
 
                     processor.ConstraintExists("TestSchema", "Users", "FK_Users_GroupId_Groups_GroupId").ShouldBeTrue();
                     runner.Down(new TestForeignKeyNamingConventionWithSchema());
-                }, false, new []{typeof(SQLiteProcessor), typeof(FirebirdProcessor)});
+                }, false, new[] { typeof(SQLiteProcessor), typeof(FirebirdProcessor) });
         }
 
         [Test]
@@ -556,7 +556,7 @@ namespace FluentMigrator.Tests.Integration
                 };
 
                 var runner = new MigrationRunner(assembly, runnerContext, processor);
-                
+
                 try
                 {
                     runner.MigrateUp(false);
@@ -590,7 +590,7 @@ namespace FluentMigrator.Tests.Integration
                 try
                 {
                     runnerContext.Tags = new[] { "TenantA" };
-                    
+
                     new MigrationRunner(assembly, runnerContext, processor).MigrateUp(false);
 
                     processor.TableExists(null, "TenantATable").ShouldBeTrue();
@@ -626,7 +626,7 @@ namespace FluentMigrator.Tests.Integration
             var processorOptions = new ProcessorOptions { PreviewOnly = true };
 
             var outputSql = new StringWriter();
-            var announcer = new TextWriterAnnouncer(outputSql){ ShowSql = true };
+            var announcer = new TextWriterAnnouncer(outputSql) { ShowSql = true };
 
             var processor = new SqlServerProcessor(connection, new SqlServer2008Generator(), announcer, processorOptions, new SqlServerDbFactory());
 
@@ -638,7 +638,7 @@ namespace FluentMigrator.Tests.Integration
                     Namespace = "FluentMigrator.Tests.Integration.Migrations",
                     PreviewOnly = true
                 };
-                
+
                 var runner = new MigrationRunner(asm, runnerContext, processor);
                 runner.MigrateUp(1, false);
 
@@ -660,7 +660,7 @@ namespace FluentMigrator.Tests.Integration
                 createTableMatches.ShouldBe(1);
                 alterTableMatches.ShouldBe(1);
                 createIndexMatches.ShouldBe(1);
-                
+
             }
             finally
             {
@@ -706,7 +706,7 @@ namespace FluentMigrator.Tests.Integration
             var excludedProcessors = new[] { typeof(SQLiteProcessor), typeof(MySqlProcessor), typeof(PostgresProcessor) };
 
             var assembly = typeof(User).Assembly;
-            
+
             var runnerContext1 = new RunnerContext(new TextWriterAnnouncer(System.Console.Out)) { Namespace = typeof(Migrations.Interleaved.Pass2.User).Namespace };
             var runnerContext2 = new RunnerContext(new TextWriterAnnouncer(System.Console.Out)) { Namespace = typeof(Migrations.Interleaved.Pass3.User).Namespace };
 
@@ -806,18 +806,18 @@ namespace FluentMigrator.Tests.Integration
         public void CanCreateSequenceWithSchema()
         {
             Action<IMigrationProcessor> action = processor =>
-                                {
-                                    var runner = new MigrationRunner(Assembly.GetExecutingAssembly(), _runnerContext, processor);
+            {
+                var runner = new MigrationRunner(Assembly.GetExecutingAssembly(), _runnerContext, processor);
 
-                                    runner.Up(new TestCreateSequence());
-                                    processor.SequenceExists("TestSchema", "TestSequence");
+                runner.Up(new TestCreateSequence());
+                processor.SequenceExists("TestSchema", "TestSequence");
 
-                                    runner.Down(new TestCreateSequence());
-                                    processor.SequenceExists("TestSchema", "TestSequence").ShouldBeFalse();
-                                };
+                runner.Down(new TestCreateSequence());
+                processor.SequenceExists("TestSchema", "TestSequence").ShouldBeFalse();
+            };
 
             ExecuteWithSqlServer2012(
-                action,true);
+                action, true);
 
             ExecuteWithPostgres(action, IntegrationTestOptions.Postgres, true);
         }
@@ -1463,7 +1463,7 @@ namespace FluentMigrator.Tests.Integration
         }
     }
 
-    internal class TestAlterColumnWithSchema: Migration
+    internal class TestAlterColumnWithSchema : Migration
     {
         public override void Up()
         {
@@ -1556,11 +1556,11 @@ namespace FluentMigrator.Tests.Integration
         }
     }
 
-    internal class TestDeleteDataWithSchema :Migration
+    internal class TestDeleteDataWithSchema : Migration
     {
         public override void Up()
         {
-            Delete.FromTable("TestTable").InSchema("TestSchema").Row(new { Name = "Test"});
+            Delete.FromTable("TestTable").InSchema("TestSchema").Row(new { Name = "Test" });
         }
 
         public override void Down()

@@ -85,7 +85,23 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
         public override void CallingConstraintExistsReturnsTrueIfConstraintExistsWithSchema()
         {
             using (var table = new PostgresTestTable(Processor, "TestSchema", "id int", "wibble int CONSTRAINT c1 CHECK(wibble > 0)"))
-                Processor.ConstraintExists("TestSchema", table.Name, "c1").ShouldBeTrue();
+                Processor.ConstraintExists("testschema", table.Name, "c1").ShouldBeTrue();
+        }
+
+        [Test]
+        public void CallingConstraintExistsCanAcceptUpperCaseConstraintNamesWithNoQuotesInsertedToLowerCase()
+        {
+            var constraintNoQuotes = Quoter.Quote("ConstraintTest");
+            using (var table = new PostgresTestTable(Processor, null, "id int", string.Format("wibble int CONSTRAINT {0} CHECK(wibble > 0)", Quoter.QuoteConstraintName(constraintNoQuotes))))
+                Processor.ConstraintExists(null, table.Name, "constrainttest").ShouldBeTrue();
+        }
+
+        [Test]
+        public void CallingConstraintExistsCanAcceptConstraintNamesWithUpperCaseWithQuotesInsertedToSameCase()
+        {
+            var constraintQuotes = Quoter.Quote("\"ConstraintTest\"");
+            using (var table = new PostgresTestTable(Processor, null, "id int", string.Format("wibble int CONSTRAINT {0} CHECK(wibble > 0)", Quoter.QuoteConstraintName(constraintQuotes))))
+                Processor.ConstraintExists(null, table.Name, "ConstraintTest").ShouldBeTrue();
         }
 
     }

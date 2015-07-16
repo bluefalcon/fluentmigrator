@@ -37,7 +37,7 @@ namespace FluentMigrator.Tests.Helpers
 
             Connection = (NpgsqlConnection)processor.Connection;
             Transaction = (NpgsqlTransaction)processor.Transaction;
-            NameWithSchema = string.IsNullOrEmpty(_schemaName) ? Name : string.Format("\"{0}\".{1}", _schemaName, Name);
+            NameWithSchema = string.IsNullOrEmpty(_schemaName) ? Name : string.Format("{0}.{1}", _schemaName, Name);
             Create();
         }
 
@@ -50,7 +50,7 @@ namespace FluentMigrator.Tests.Helpers
         {
             if (!string.IsNullOrEmpty(_schemaName))
             {
-                using (var command = new NpgsqlCommand(string.Format("CREATE SCHEMA \"{0}\";", _schemaName), Connection, Transaction))
+                using (var command = new NpgsqlCommand(string.Format("CREATE SCHEMA {0};", _schemaName), Connection, Transaction))
                     command.ExecuteNonQuery();
             }
 
@@ -66,7 +66,7 @@ namespace FluentMigrator.Tests.Helpers
 
             if (!string.IsNullOrEmpty(_schemaName))
             {
-                using (var command = new NpgsqlCommand(string.Format("DROP SCHEMA \"{0}\"", _schemaName), Connection, Transaction))
+                using (var command = new NpgsqlCommand(string.Format("DROP SCHEMA {0}", _schemaName), Connection, Transaction))
                     command.ExecuteNonQuery();
             }
         }

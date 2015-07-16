@@ -1,4 +1,7 @@
-﻿using FluentMigrator.Runner.Generators.Postgres;
+﻿using System.Data;
+using FluentMigrator.Expressions;
+using FluentMigrator.Model;
+using FluentMigrator.Runner.Generators.Postgres;
 using NUnit.Framework;
 using NUnit.Should;
 
@@ -23,7 +26,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" ALTER \"TestColumn1\" TYPE varchar(20)");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 ALTER TestColumn1 TYPE varchar(20)");
         }
 
         [Test]
@@ -33,7 +36,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.Column.IsNullable = null;
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" ALTER \"TestColumn1\" TYPE varchar(20)");
+            result.ShouldBe("ALTER TABLE public.TestTable1 ALTER TestColumn1 TYPE varchar(20)");
         }
 
         [Test]
@@ -43,7 +46,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" ALTER \"TestColumn1\" TYPE serial");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 ALTER TestColumn1 TYPE serial");
         }
 
         [Test]
@@ -52,7 +55,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetAlterColumnAddAutoIncrementExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" ALTER \"TestColumn1\" TYPE serial");
+            result.ShouldBe("ALTER TABLE public.TestTable1 ALTER TestColumn1 TYPE serial");
         }
 
         [Test]
@@ -62,7 +65,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" ADD \"TestColumn1\" varchar(5) NOT NULL");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 ADD TestColumn1 varchar(5) NOT NULL");
         }
 
         [Test]
@@ -71,7 +74,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateColumnExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" ADD \"TestColumn1\" varchar(5) NOT NULL");
+            result.ShouldBe("ALTER TABLE public.TestTable1 ADD TestColumn1 varchar(5) NOT NULL");
         }
 
         [Test]
@@ -81,7 +84,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" ADD \"TestColumn1\" decimal(19,2) NOT NULL");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 ADD TestColumn1 decimal(19,2) NOT NULL");
         }
 
         [Test]
@@ -90,7 +93,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetCreateDecimalColumnExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" ADD \"TestColumn1\" decimal(19,2) NOT NULL");
+            result.ShouldBe("ALTER TABLE public.TestTable1 ADD TestColumn1 decimal(19,2) NOT NULL");
         }
 
         [Test]
@@ -100,7 +103,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" DROP COLUMN \"TestColumn1\"");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 DROP COLUMN TestColumn1");
         }
 
         [Test]
@@ -109,7 +112,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetDeleteColumnExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" DROP COLUMN \"TestColumn1\"");
+            result.ShouldBe("ALTER TABLE public.TestTable1 DROP COLUMN TestColumn1");
         }
 
         [Test]
@@ -119,7 +122,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" DROP COLUMN \"TestColumn1\";" + System.Environment.NewLine + "ALTER TABLE \"TestSchema\".\"TestTable1\" DROP COLUMN \"TestColumn2\"");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 DROP COLUMN TestColumn1;" + System.Environment.NewLine + "ALTER TABLE TestSchema.TestTable1 DROP COLUMN TestColumn2");
         }
 
         [Test]
@@ -128,7 +131,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetDeleteColumnExpression(new[] { "TestColumn1", "TestColumn2" });
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" DROP COLUMN \"TestColumn1\";" + System.Environment.NewLine + "ALTER TABLE \"public\".\"TestTable1\" DROP COLUMN \"TestColumn2\"");
+            result.ShouldBe("ALTER TABLE public.TestTable1 DROP COLUMN TestColumn1;" + System.Environment.NewLine + "ALTER TABLE public.TestTable1 DROP COLUMN TestColumn2");
         }
 
         [Test]
@@ -138,7 +141,7 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             expression.SchemaName = "TestSchema";
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"TestSchema\".\"TestTable1\" RENAME COLUMN \"TestColumn1\" TO \"TestColumn2\"");
+            result.ShouldBe("ALTER TABLE TestSchema.TestTable1 RENAME COLUMN TestColumn1 TO TestColumn2");
         }
 
         [Test]
@@ -147,7 +150,27 @@ namespace FluentMigrator.Tests.Unit.Generators.Postgres
             var expression = GeneratorTestHelper.GetRenameColumnExpression();
 
             var result = Generator.Generate(expression);
-            result.ShouldBe("ALTER TABLE \"public\".\"TestTable1\" RENAME COLUMN \"TestColumn1\" TO \"TestColumn2\"");
+            result.ShouldBe("ALTER TABLE public.TestTable1 RENAME COLUMN TestColumn1 TO TestColumn2");
+        }
+
+        [Test]
+        public void CanCreateColumnWithUnderScoreNoQuotes()
+        {
+            var column = new ColumnDefinition { Name = "Test_Column_Name", Type = DbType.Decimal, Size = 19, Precision = 2 };
+            var expression = new CreateColumnExpression { TableName = "TestTableName1", Column = column };
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("ALTER TABLE public.TestTableName1 ADD Test_Column_Name decimal(19,2) NOT NULL");
+        }
+
+        [Test]
+        public void CanCreateColumnInQuotesUsingSingleQuote()
+        {
+            var column = new ColumnDefinition { Name = "Test'Column_Name", Type = DbType.Decimal, Size = 19, Precision = 2 };
+            var expression = new CreateColumnExpression { TableName = "TestTableName1", Column = column };
+
+            var result = Generator.Generate(expression);
+            result.ShouldBe("ALTER TABLE public.TestTableName1 ADD \"Test'Column_Name\" decimal(19,2) NOT NULL");
         }
     }
 }
