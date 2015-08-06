@@ -70,7 +70,7 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
         {
             //TODO What about TEst_Table???
             using (var table = new PostgresTestTable("TESTTable", Processor, null, "Id int"))
-                Processor.TableExists(null, table.Name.ToLower()).ShouldBeTrue();
+                Processor.TableExists(null, table.Name).ShouldBeTrue();
         }
 
         [Test]

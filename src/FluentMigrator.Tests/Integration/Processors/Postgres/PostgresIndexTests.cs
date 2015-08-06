@@ -136,7 +136,7 @@ namespace FluentMigrator.Tests.Integration.Processors.Postgres
                 cmd.CommandText = string.Format("CREATE INDEX {0} ON {1} (id)", idxName, table.Name);
                 cmd.ExecuteNonQuery();
 
-                Processor.IndexExists(null, table.Name, idxName.ToLower()).ShouldBeTrue();
+                Processor.IndexExists(null, table.Name, idxName).ShouldBeTrue();
             }
         }
 

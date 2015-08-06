@@ -19,7 +19,7 @@ namespace FluentMigrator.Tests.Helpers
         public PostgresTestTable(PostgresProcessor processor, string schemaName, params string[] columnDefinitions)
         {
             _schemaName = schemaName;
-            Name = "table" + Guid.NewGuid().ToString("N");
+            Name = "TestTable" + Guid.NewGuid().ToString("N");
             Init(processor, columnDefinitions);
 
         }

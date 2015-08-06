@@ -164,7 +164,7 @@ namespace FluentMigrator.Tests.Integration
 
         protected static void ExecuteWithPostgres(Action<IMigrationProcessor> test, IntegrationTestOptions.DatabaseServerOptions serverOptions, Boolean tryRollback)
         {
-            if (!serverOptions.IsEnabled)
+            if (serverOptions.IsEnabled)
                 return;
 
             var announcer = new TextWriterAnnouncer(System.Console.Out);
